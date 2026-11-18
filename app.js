@@ -97,37 +97,40 @@ const LEAD_ENDPOINT = 'https://lead-relay.leestygpt.workers.dev/lead/27UD4AXXF6'
 
     /* ---------- выписка: детерминированная отрисовка по прогрессу p ---------- */
     const scene = $('#statement'), sheet = $('#sheet');
+    const nb = '\u00a0';
+    const money = n => n >= 1e6 ? (n / 1e6).toFixed(2).replace('.', ',') + nb + 'млн' + nb + '₽' : Math.round(n / 1000) + nb + 'тыс.' + nb + '₽';
     const rows = $$('.row', sheet).map(el => ({
       el, bar: $('.row__bar i', el), s: $('.row__s', el), r: $('.row__r', el),
-      spend: +el.dataset.spend, ret: +el.dataset.ret, ok: el.dataset.ok === '1', txt: el.dataset.txt || ''
+      spend: +el.dataset.spend, ret: +el.dataset.ret, kind: el.dataset.ok, txt: el.dataset.txt || ''
     }));
-    const FINAL = [163600, 90900, 45500];       // новые суммы у окупающихся строк, в сумме 300 000
-    let oi = 0; rows.forEach(r => { if (r.ok) r.final = FINAL[oi++]; });
-    const MAXB = 170000, caps = $$('.cap'), sumNow = $('#sumNow'), sumSt = $('#sumSt'), gain = $('#gain');
+    const freed = rows.filter(r => r.kind === '0').reduce((a, r) => a + r.spend, 0);
+    const okSum = rows.filter(r => r.kind === '1').reduce((a, r) => a + r.spend, 0);
+    rows.forEach(r => { if (r.kind === '1') r.final = r.spend + freed * r.spend / okSum; });
+    const MAXB = 370000, caps = $$('.cap'), sumNow = $('#sumNow'), sumSt = $('#sumSt'), gain = $('#gain');
     let lastStage = -1, lastSt = '';
     const paint = p => {
       let sum = 0;
       rows.forEach((r, i) => {
-        const k = clamp((p - (.22 + i * .045)) / .04);
+        const k = clamp((p - (.2 + i * .045)) / .04);
         const c = clamp((p - .54) / .18), d = clamp((p - .76) / .2);
-        const spend = r.ok ? r.spend + (r.final - r.spend) * d : r.spend * (1 - c);
-        sum += Math.round(spend / 100) * 100;
-        r.s.textContent = fmt(Math.round(spend / 100) * 100);
+        const spend = r.kind === '1' ? r.spend + (r.final - r.spend) * d : r.kind === '0' ? r.spend * (1 - c) : r.spend;
+        sum += spend;
+        r.s.textContent = money(spend);
         r.bar.style.setProperty('--w', (spend / MAXB).toFixed(3));
-        r.r.textContent = k <= 0 ? '?' : (r.txt ? (k > .6 ? r.txt : '…') : fmt(r.ret * k));
+        r.r.textContent = k <= 0 ? '?' : (r.txt ? (k > .6 ? r.txt : '…') : money(r.ret * k));
         r.el.classList.toggle('is-q', k <= 0);
-        r.el.classList.toggle('is-ok', k >= 1 && r.ok);
-        r.el.classList.toggle('is-bad', k >= 1 && !r.ok);
-        r.el.classList.toggle('is-cut', !r.ok && c > .35);
+        r.el.classList.toggle('is-ok', k >= 1 && r.kind === '1');
+        r.el.classList.toggle('is-bad', k >= 1 && r.kind === '0');
+        r.el.classList.toggle('is-cut', r.kind === '0' && c > .35);
       });
-      sumNow.textContent = fmt(sum);
-      const st = p < .22 ? 'Что принесли эти деньги, неизвестно.'
+      sumNow.textContent = money(sum);
+      const st = p < .2 ? 'Что принесли эти деньги, неизвестно.'
         : p < .5 ? 'Считаем, что вернулось с каждого рубля…'
-        : p < .54 ? 'Не окупается: 135 000 ₽ в месяц.'
-        : p < .74 ? 'Снимаем с бюджета: 135 000 ₽.'
-        : 'Те же 300 000 ₽, но работают там, где окупаются.';
-      if (st !== lastSt) { sumSt.textContent = st.replace(/(\d) (\d)/g, '$1 $2'); lastSt = st; }
-      const stage = p < .22 ? 0 : p < .52 ? 1 : p < .76 ? 2 : 3;
+        : p < .54 ? '62% бюджета, около 440 тыс. ₽, не окупается.'
+        : p < .74 ? 'Отключаем около 440 тыс. ₽, выручка теряет 134 тыс. ₽ (2%).'
+        : 'Те же 712 тыс. ₽ работают там, где окупаются.';
+      if (st !== lastSt) { sumSt.textContent = st; lastSt = st; }
+      const stage = p < .2 ? 0 : p < .52 ? 1 : p < .76 ? 2 : 3;
       if (stage !== lastStage) { caps.forEach((c, i) => c.classList.toggle('is-on', i === stage)); lastStage = stage; }
       gain.classList.toggle('is-on', p > .9);
     };
