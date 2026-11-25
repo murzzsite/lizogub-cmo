@@ -363,3 +363,8 @@ p{margin:0 0 1em}
   .sum__st{font-size:13px}
   .sheet__sum b{font-size:24px}
 }
+
+/* согласие на обработку данных */
+.agree{display:grid;grid-template-columns:24px 1fr;gap:12px;align-items:start;margin:4px 0 18px;font-size:14px;line-height:1.45;color:var(--ink-2)}
+.agree input{width:22px;height:22px;margin:1px 0 0;accent-color:var(--ink)}
+.agree a{color:var(--ink)}

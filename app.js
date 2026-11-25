@@ -211,6 +211,8 @@ const LEAD_ENDPOINT = 'https://lead-relay.leestygpt.workers.dev/lead/27UD4AXXF6'
       const btn = form.querySelector('button[type="submit"]'), orig = btn.textContent;
       const payload = {}; new FormData(form).forEach((v, k) => { payload[k] = v; });
       if (payload._gotcha) return;
+      if (!payload.consent) { msg.textContent = 'Отметьте согласие на обработку персональных данных.'; return; }
+      delete payload.consent;
       if (!payload.name || !payload.phone) { msg.textContent = 'Заполните имя и контакт.'; return; }
       payload.comment = 'Что беспокоит: ' + payload.topic + (payload.budget ? '. Бюджет на маркетинг в месяц: ' + payload.budget : '');
       btn.disabled = true; btn.textContent = 'Отправляем...'; msg.textContent = '';
