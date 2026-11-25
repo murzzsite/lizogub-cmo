@@ -16,7 +16,7 @@
 .sec__num{flex:0 0 auto;display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:var(--gold);color:var(--ink);font:700 20px var(--font-d)}
 .sec h2{font:700 clamp(26px,3.2vw,44px)/1.04 var(--font-d);letter-spacing:-.03em;overflow-wrap:anywhere}
 .sec__intro{max-width:64ch;margin:0 0 18px;color:var(--ink-2)}
-.sec__body{display:grid;gap:12px}
+.sec__body{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
 .block{background:var(--surface);padding:clamp(18px,2.6vw,32px);border-left:6px solid var(--gold)}
 .block h3{font:600 clamp(19px,1.7vw,24px)/1.2 var(--font-d);letter-spacing:-.02em;margin-bottom:14px}
 .block__sub{color:var(--ink-2);font-size:15px;margin:-6px 0 14px}
