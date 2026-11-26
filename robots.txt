@@ -1,6 +1,4 @@
 User-agent: *
 Allow: /
 
-# Пока сайт на github.io, robots.txt учитывается поисковиками только в корне домена.
-# После переноса на ollizogub.ru заменить адрес карты сайта на https://ollizogub.ru/sitemap.xml
-Sitemap: https://murzzsite.github.io/lizogub-cmo/sitemap.xml
+Sitemap: https://ollizogub.ru/sitemap.xml
