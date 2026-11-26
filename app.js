@@ -58,7 +58,7 @@ const LEAD_ENDPOINT = 'https://lead-relay.leestygpt.workers.dev/lead/27UD4AXXF6'
       if (r > 0) {
         const month = r * 0.3, ratio = r / b;
         resBig.innerHTML = '+' + numFmt(month).replace(' ₽', '') + ' ₽ выручки в месяц';
-        resSmall.textContent = 'Сейчас каждый рубль бюджета возвращает ' + ratio.toFixed(1).replace('.', ',') + ' ₽ выручки. Плюс 30% при том же бюджете — это ' + numFmt(month * 12) + ' в год.';
+        resSmall.textContent = 'Сейчас каждый рубль бюджета возвращает ' + ratio.toFixed(1).replace('.', ',') + ' ₽ выручки. Плюс 30% при том же бюджете - это ' + numFmt(month * 12) + ' в год.';
       } else {
         resBig.textContent = numFmt(b * 12) + ' в год';
         resSmall.textContent = 'Столько вы вкладываете в маркетинг. Если вы не знаете, что возвращается с этих денег, диагностика начинается с этого вопроса. Впишите выручку выше, и я покажу, как выглядит «+30%».';
