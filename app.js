@@ -219,6 +219,7 @@ const LEAD_ENDPOINT = 'https://lead-relay.leestygpt.workers.dev/lead/27UD4AXXF6'
       try {
         const r = await fetch(LEAD_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
         if (!r.ok) throw new Error('HTTP ' + r.status);
+        try { window.ym && ym(114606458, 'reachGoal', 'lead'); } catch (e) {}
         msg.textContent = 'Заявка отправлена. Свяжусь с вами, чтобы согласовать время.'; form.reset();
       } catch (err) { console.error(err); msg.textContent = 'Не отправилось. Попробуйте ещё раз или напишите в MAX.'; }
       finally { btn.disabled = false; btn.textContent = orig; }
